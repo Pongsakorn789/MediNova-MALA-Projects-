@@ -21,7 +21,7 @@ Currently, the healthcare network faces critical operational challenges:
 
 ---
 
-## 3. User Validation Gate: Interview Summary (Target: ≥ 5 Real Users)
+## 3. User Validation Gate: Interview Summary (Target: ≥ 5 Real Users) ต้องเก็บความต้องการ
 To validate the problem space and ensure traceability, interviews were conducted with five frontline healthcare stakeholders:
 
 | Stakeholder Role | Organization | Key Pain Points & Validated Needs |
