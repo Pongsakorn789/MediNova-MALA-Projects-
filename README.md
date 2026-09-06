@@ -21,13 +21,13 @@ Currently, the healthcare network faces critical operational challenges:
 
 ---
 
-## 3. User Validation Gate: Interview Summary (Target: ≥ 5 Real Users) ต้องเก็บความต้องการ
-To validate the problem space and ensure traceability, interviews were conducted with five frontline healthcare stakeholders:
+## 3. User Requirements & Validation (Derived from Domain Requirements)
+Based on field requirements and stakeholder analysis conducted with Chiangrai Prachanukroh Hospital network, requirements have been validated across 3 primary user groups:
 
-| Stakeholder Role | Organization | Key Pain Points & Validated Needs |
+| Stakeholder Group | Core Operational Pain Point | Validated Solution Requirement |
 |---|---|---|
-| **User 1: Village Health Volunteer (อสม.)** | Community Level | Complex forms lead to data entry errors in the field. Needs an ultra-simplified mobile interface with large buttons that only requires entering current weight and answering simple yes/no behavioral questions. |
-| **User 2: Village Health Volunteer (อสม.)** | Community Level | Cannot conduct in-depth medical evaluations. Prefers standard checklists (e.g., recent diarrhea/vomiting, alcohol intake) rather than open text fields to ensure fast on-site screening. |
-| **User 3: Registered Nurse** | SHPH / Primary Care | Switching between multiple hospital tabs to retrieve serum creatinine and eGFR is time-consuming. Strongly requests automated fetching of the latest eGFR and height directly from the central hospital database. |
-| **User 4: Public Health Officer** | SHPH / Primary Care | Alerts without clinical guidelines create uncertainty. Requests that low-to-moderate risk cases provide embedded Clinical Practice Guidelines (CPG) so primary nurses can counsel patients immediately without unnecessary hospital escalations. |
-| **User 5: Internal Medicine Specialist** | Tertiary Center | Suffers from alarm fatigue caused by non-urgent alerts. Requests emergency push notifications and audible pop-ups reserved strictly for high-risk/critical red cases, coupled with one-click dosage adjustment logging. |
+| **Village Health Volunteers (VHV / อสม.)** | Complex reporting methods lead to delayed reporting and errors in the field. Volunteers need an ultra-streamlined workflow without clinical calculations. | **Smart Mobile Screening:** Lightweight interface requiring only current weight and binary checklists (dehydration, alcohol intake). Automated BMI computation. |
+| **Sub-district Health Promoting Hospital (SHPH / รพ.สต.)** | Data is scattered across multiple hospital systems. Cross-referencing serum creatinine and eGFR manually is time-consuming and error-prone. | **Auto-Data Integration & Triage:** Automatic fetching of patient height and latest eGFR from central hospital records; multi-tier risk dashboard (Green/Yellow/Red). |
+| **Sub-district Health Promoting Hospital (SHPH / รพ.สต.)** | Alerts lack actionable next steps, causing uncertainty whether to escalate or handle locally. | **CPG Integration:** Standard Clinical Practice Guidelines embedded within low-risk screens so primary staff can resolve cases locally. |
+| **Hospital Physicians (รพ.ศูนย์)** | Alarm fatigue caused by undifferentiated notifications; critical high-risk MALA cases are not prioritized urgently. | **High-Priority Escalation:** Targeted real-time audible and pop-up notifications restricted strictly to critical (Red Tier) patients. |
+| **Hospital Physicians (รพ.ศูนย์)** | Fragmented clinical context when reviewing prescription risks remotely. | **Closed-Loop Action:** Direct access to renal trends and lifestyle triggers with a one-click Metformin dosage adjustment log synced back to primary care. |
