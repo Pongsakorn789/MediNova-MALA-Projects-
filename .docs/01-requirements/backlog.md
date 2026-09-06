@@ -1,13 +1,42 @@
-# Product Backlog: MALA Risk Screening System
+# Product Backlog: MALA Risk Screening & Surveillance System
 
-Every user requirement is strictly traced back to verified user pains gathered during the discovery phase.
+All user stories are strictly derived from and traced back to domain requirements and user pain points identified at Chiangrai Prachanukroh Hospital network.
 
-| Story ID | As a/an... | I want to... | So that... | Priority | Traced User Pain |
-|---|---|---|---|---|---|
-| **US-01** | Village Health Volunteer (อสม.) | submit patient current weight and behavioral checklist (dehydration, alcohol) via mobile | field data is seamlessly synchronized to the sub-district clinic without manual paper records | High | Paper-based tracking is slow and leads to delayed or lost field data. |
-| **US-02** | Primary Care Nurse (รพ.สต.) | have the system automatically fetch height and latest eGFR values from the hospital database | I do not have to manually log in to disparate hospital systems to re-enter lab metrics | High | Manual data cross-referencing between disconnected systems is tedious and prone to error. |
-| **US-03** | Primary Care Nurse (รพ.สต.) | view automated BMI calculations and multi-factor risk categorization (Green / Yellow / Red) | I can instantly identify patient risk tiers without performing manual calculations | High | Absence of quantitative risk stratification makes triage inconsistent. |
-| **US-04** | Primary Care Nurse (รพ.สต.) | access standard Clinical Practice Guidelines (CPG) directly within low-risk patient records | I can provide immediate lifestyle and adherence counseling on-site and resolve the case | Medium | Legacy alerts only state that a risk exists without offering actionable clinical steps. |
-| **US-05** | Primary Care Nurse (รพ.สต.) | escalate high-risk (Red) cases with automated sound and pop-up alerts to the central hospital | urgent cases are reviewed by attending physicians immediately | High | Referral bottlenecks cause life-threatening delays in acute MALA interventions. |
-| **US-06** | Attending Physician (รพ.ศูนย์) | receive targeted emergency notifications for high-risk patients and record Metformin adjustments | I can adjust or suspend Metformin dosages with complete lab and lifestyle context | High | Alert fatigue caused by indiscriminate warnings; lack of integrated context during prescription reviews. |
-| **US-07** | Primary Care Nurse (รพ.สต.) | view a real-time risk dashboard showing which volunteer collected the data and current patient status | clinic staff can track community follow-up coverage efficiently | Medium | Difficulty monitoring whether non-attending diabetic patients have been visited in the community. |
+---
+
+## 1. Traceability Backlog Matrix
+
+| Story ID | User Role | User Story (As a... I want to... So that...) | Priority | Traced User Pain |
+|:---:|---|---|:---:|---|
+| **US-01** | Village Health Volunteer (อสม.) | **As a** VHV, **I want to** submit a patient's current weight and binary risk checklist (acute dehydration, alcohol use) via a lightweight mobile form, **so that** community field data is rapidly synced to the clinic without paper delays. | High | **Manual & Delayed Reporting:** Field data relies on slow paper forms, leading to outdated patient records at primary health units. |
+| **US-02** | Primary Care Nurse (รพ.สต.) | **As a** Primary Care Nurse, **I want** the system to automatically fetch height and the latest renal function labs (eGFR) from the central hospital HIS, **so that** I do not need to perform duplicate manual data entry. | High | **Fragmented Hospital Systems:** Patient records reside across disconnected hospital databases, requiring laborious manual cross-checking. |
+| **US-03** | Primary Care Nurse (รพ.สต.) | **As a** Primary Care Nurse, **I want** the Risk Engine to compute BMI and evaluate risk tiers (Green / Yellow / Red) automatically, **so that** triage is standardized and immune to human calculation errors. | High | **Lack of Quantitative Stratification:** No automated multidimensional risk scoring currently exists, leaving high-risk cases unnoticed. |
+| **US-04** | Primary Care Nurse (รพ.สต.) | **As a** Primary Care Nurse, **I want to** view embedded Clinical Practice Guidelines (CPG) on the evaluation screen for low-risk cases, **so that** I can provide immediate lifestyle counseling and resolve the encounter locally. | Medium | **Non-Actionable Alerts:** Legacy alerts simply flag that a risk exists without offering actionable clinical steps on what to do next. |
+| **US-05** | Primary Care Nurse (รพ.สต.) | **As a** Primary Care Nurse, **I want to** trigger an immediate emergency escalation (visual pop-up + sound alert) to attending physicians for Red Tier cases, **so that** acute interventions occur before fatal complications arise. | High | **Referral Bottlenecks:** Delays in escalating critical patients who are at acute risk of life-threatening MALA acidosis. |
+| **US-06** | Hospital Physician (รพ.ศูนย์) | **As an** Attending Physician, **I want to** review high-risk patient profiles and execute a Metformin dosage adjustment/cessation order directly, **so that** updated prescriptions sync back seamlessly to primary care. | High | **Alarm Fatigue & Broken Loops:** Doctors face notification fatigue from non-critical alerts and lack an integrated channel to log prescription adjustments. |
+| **US-07** | Primary Care Nurse (รพ.สต.) | **As a** Primary Care Nurse, **I want to** monitor a centralized surveillance dashboard tracking screening origins (which volunteer collected the data), **so that** we can track screening coverage for non-attending diabetic patients. | Medium | **Community Follow-Up Gaps:** Difficult to track whether patients who miss hospital appointments have been actively monitored in the field. |
+
+---
+
+## 2. Acceptance Criteria (Definition of Done)
+
+- **US-01 (Community Data Capture):**
+  - Mobile view renders responsive inputs with large tap targets.
+  - Weight input automatically calculates and validates BMI bounds.
+  - Binary switches for: (1) Temporary dehydration / diarrhea, (2) Alcohol consumption.
+  - Submission queues the record in the assigned sub-district clinic within 2 seconds.
+
+- **US-02 & US-03 (Data Integration & Risk Stratification):**
+  - System calls HIS integration endpoint using Citizen ID to retrieve latest `eGFR` and `height`.
+  - Risk Stratification:
+    - **Green (Low Risk):** Normal eGFR, no acute lifestyle risk factors.
+    - **Yellow (Moderate Risk):** Borderline eGFR or isolated moderate lifestyle factor.
+    - **Red (High Risk / Critical):** Severely reduced eGFR, high Metformin dose, or presence of acute dehydration/alcoholism.
+
+- **US-04 & US-05 (Clinical Decision Support & Escalation):**
+  - Green Tier displays verified CPG counseling directives.
+  - Red Tier generates an audible prompt and browser modal pop-up on the physician portal.
+
+- **US-06 (Closed-Loop Prescription Action):**
+  - Physician portal restricts medication adjustments strictly to certified physician logins (Role-Based Access Control).
+  - Adjustments (`REDUCE_DOSE`, `DISCONTINUE`) record an audit trail log and sync back to the clinic dashboard.
