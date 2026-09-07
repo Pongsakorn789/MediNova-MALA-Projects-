@@ -22,7 +22,7 @@
 ---
 
 ## Interactive Prototype & Diagrams
-- **Figma Interactive Prototype:** `[https://www.figma.com/design/zoZGhvUfplE9LOq8hVHxZo/MALA?node-id=40-2&t=5CtfCJJbjr6rpx3z-1]`
+- **Figma Interactive Prototype:** `https://www.figma.com/design/zoZGhvUfplE9LOq8hVHxZo/MALA?node-id=40-2&t=5CtfCJJbjr6rpx3z-1`
 - **System Diagrams:** Located in `.docs/02-design/diagrams/`:
   1. `use-case-diagram.png` (Actors: VHV, SHPH Nurse, Central Hospital Physician, Central HIS)
   2. `sequence-diagram.png` (End-to-end data submission, processing, and escalation lifecycle)
