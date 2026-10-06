@@ -17,7 +17,7 @@ Delayed Community Follow-ups: Patients in remote communities are often tracked t
 
 ## 2. Target Users
 1. Village Health Volunteers (VHV / อสม.): Frontline field workers responsible for capturing dynamic community-level data (e.g., current weight, acute dehydration status, alcohol consumption) via mobile devices.
-2. Health Center Staff: Nurses and public health workers managing walk-in screenings and medication dispensaries.
+2. Diabetic patients using Metformin: Patients in the catchment area of ​​the Sub-district Health Promoting Hospital (Ror.Por.Sor.Tor.) who are receiving Metformin continuously—particularly high-risk groups, such as the elderly and those with reduced kidney function.
 3. Doctors & Multidisciplinary Teams: Hospital physicians responsible for clinical interventions and medication adjustments.
 
 ---
