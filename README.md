@@ -1,7 +1,3 @@
-# MALA Risk Screening & Monitoring System
-A digital platform designed to assess and monitor the risk of Metformin-Associated Lactic Acidosis (MALA) in diabetic patients with Chronic Kidney Disease (CKD). The system ensures seamless collaboration between Village Health Volunteers (VHVs) via a Mobile Web App, Health Center Staff via Tablets/Web, and Hospital Doctors. It utilizes an AI-driven Risk Engine to analyze health data (eGFR), behavior, and medication history to provide real-time risk alerts and clinical decision support.
-
----
 # MALA Risk Screening & Alert System
 
 Metformin-Associated Lactic Acidosis (MALA) screening at the point of dispensing.
