@@ -1,4 +1,4 @@
-# Product Backlog: MALA Risk Screening & Surveillance System
+# Product Backlog: MALA Risk Screening & Monitoring System
 
 **Version:** 1.1 (revises the original backlog)
 **Date Revised:** November 15, 2026
@@ -77,6 +77,7 @@ Role note: the MALA case manager and the system administrator are **one role**. 
 
 - **US-07 (Guidance):**
   - A case that is not at risk is saved with guidance and is not queued for the case manager.
+  - Guidance is **rule-based** (fixed rules, no trained AI model). It covers reviewing eGFR and dose, advice for heavy drinking, advice during illness or fasting, and the use of painkillers or herbal medicine.
   - When vomiting or diarrhea is present, the Sick Day Rule warning is shown.
   - "เสร็จสิ้น · สแกนผู้ป่วยรายถัดไป" returns to step 1 with no data left from the previous patient.
 
