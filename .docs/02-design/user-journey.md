@@ -38,8 +38,8 @@
 ## Interactive Prototype & Diagrams
 - **Live prototype:** `https://mala-project-2026.web.app`
 - **Figma Interactive Prototype:** `https://www.figma.com/design/zoZGhvUfplE9LOq8hVHxZo/MALA?node-id=40-2&t=w6qH4Xm3FKStLGEs-1` (check that it matches the new flow)
-- **System Diagrams:** Located in `.docs/02-design/diagrams/`. The images below were drawn for the earlier design and **need to be redrawn** for the new flow:
-  1. `use-case-diagram.png` (Actors: SHPH staff, physician (mockup), MALA case manager / administrator (mockup))
-  2. `sequence-diagram.png` (Patient confirmation → dose check → fail: doctor's queue; pass: weight, height, risk factors → Part 2 score → at risk: case manager queue)
-  3. `data-flow-diagram.png` (Inputs: eGFR, Metformin dose, BMI, alcohol, symptoms, medicines → Part 1 dose check → Part 2 score → routing to the doctor's queue or the case manager queue)
-  4. `er-diagram.png` (Database schema: Users, Patients, Screenings with the Part 1 result and the Part 2 score, queue entries for the doctor and the case manager)
+- **System Diagrams:** Located in `.docs/02-design/4 Diagrams/`. The images below were drawn for the earlier design and **need to be redrawn** for the new flow:
+  1. `1. System Context Diagram.png` (PCU Staff, the MALA Screening System, the hospital HIS, the doctor's queue and the case manager queue)
+  2. `2. Use Case Daigram.jpg` (Actors: PCU Staff, physician (mockup), MALA case manager / administrator (mockup))
+  3. `3. System Architecture Diagram.png` (Frontend: PCU web application and the two mockup screens; backend: dose check, risk score, routing, audit; data layer)
+  4. `4. Activity Daiagram.jpg` (Patient confirmation → dose check → fail: doctor's queue; pass: weight, height, risk factors → Part 2 score → at risk: case manager queue; not at risk: guidance)
