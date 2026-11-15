@@ -4,11 +4,15 @@ Metformin-Associated Lactic Acidosis (MALA) screening at the point of dispensing
 
 Presented by Warangkana Ngandee, Drug Information Center, Chiangrai Prachanukroh Hospital.
 
+**Version:** 1.1 (revised November 15, 2026) · Prototype: https://mala-project-2026.web.app
+
 ## Overview
 
 A web application that lets **PCU Staff** (Primary Care Unit Staff, เจ้าหน้าที่ รพ.สต.) screen every diabetic patient who receives Metformin, at the moment of dispensing.
 
-The system pulls the patient's latest eGFR from the hospital database, combines it with a few items the staff member enters (weight, height, alcohol use, symptoms, medication habits), calculates a risk result immediately, and alerts the hospital's multidisciplinary team when risk exceeds the defined threshold. Every screening is stored in a central database so it can be audited later.
+The system holds each patient's latest eGFR and current Metformin dose and **checks the dose first**. If the dose is unsafe, the screening stops, the case is sent to the doctor's queue immediately, and the MALA assessment is skipped. If the dose is safe, the staff member enters weight, height and a few answers (alcohol use, symptoms, medicines), and the system calculates the MALA risk score. A patient at risk is placed in the **MALA case manager** queue. Every screening is stored so it can be audited later.
+
+> **Prototype scope:** the PCU Staff screening flow is fully implemented. The **physician** and **MALA case manager** screens are **mockups** (display and routing); the hospital takes them over and implements the real functions.
 
 ## Contents
 
@@ -19,9 +23,11 @@ The system pulls the patient's latest eGFR from the hospital database, combines 
 - [Screening criteria](#screening-criteria)
 - [Screening questionnaire and report fields](#screening-questionnaire-and-report-fields)
 - [System workflow](#system-workflow)
+- [Case manager dashboard](#case-manager-dashboard)
 - [Expected benefits](#expected-benefits)
 - [Cost and rollout](#cost-and-rollout)
 - [Data protection](#data-protection)
+- [Testing](#testing)
 - [Open items](#open-items)
 
 ## Problem
@@ -36,11 +42,12 @@ MALA is a severe complication of Metformin use and is costly to treat: roughly 3
 
 1. **Diabetic patients taking Metformin**: patients in the PCU catchment area who receive Metformin continuously, especially higher-risk groups such as the elderly and those with reduced kidney function.
 2. **PCU Staff: Primary Care Unit Staff (เจ้าหน้าที่ รพ.สต.)**, the primary users of the web application. They dispense the drug and meet patients directly, so they perform the screening, record the data, and give the individualized advice the app recommends.
-3. **Hospital multidisciplinary team**: physicians, pharmacists, and nurses responsible for monitoring and for clinical decisions when a high-risk alert is raised.
+3. **Physician / multidisciplinary team (mockup):** receives every **dose-fail** case in the doctor's queue. The real functions (dose orders and so on) are implemented by the hospital.
+4. **MALA case manager (mockup):** receives the at-risk cases and sees the dashboard and report ("คิวติดตามกลุ่มเสี่ยง MALA", marked "ผู้ดูแลเคส · ไม่ใช่คิวแพทย์"). The case manager is also the system administrator (one role). Follow-up after receiving a case is done by the hospital.
 
 ## Approach
 
-PCU Staff record each patient's risk factors at the point of dispensing through the web application. Data goes to a central database, the system calculates risk against standard criteria, and an automatic alert is sent when risk exceeds the threshold.
+PCU Staff record each patient's risk factors at the point of dispensing through the web application. The system applies the criteria in a fixed order: **first the dose check (Part 1), then the MALA risk score (Part 2)**. Each result is routed to the right place.
 
 **Goal:** every time Metformin is dispensed through a PCU, risk is screened and recorded systematically, completely, and in a way that can be reviewed afterwards.
 
@@ -48,56 +55,59 @@ PCU Staff record each patient's risk factors at the point of dispensing through 
 
 ### Step-by-step screening form (mobile-friendly)
 
-A five-step flow designed for one-handed use, with large buttons and one question per screen:
+A five-step flow designed for one-handed use, with large buttons and one question group per screen:
 
-1. **Scan HN**: the camera reads the HN from the patient's record book or card; the app asks "Is this HN correct?" before filling it in, reducing typing errors.
-2. **Weight**: numeric keypad, showing the previous weight so staff can see the trend.
-3. **Height**: entered once and reused at later visits; BMI is calculated automatically.
-4. **Alcohol use**: chosen from clearly defined levels instead of free text, so data is comparable across all PCUs.
-5. **Review and submit**: one summary screen. After submission the system saves the record and calculates the score within seconds. The whole process should take no more than 1–2 minutes per patient.
+1. **Identify the patient** (step 1 of 5): scan the HN with the camera, pick the patient from the list (search by name, HN or ID card), import a patient list from an Excel file, or add a patient by hand. The manual form takes name, HN / ID card number, **date of birth (the system calculates the age)**, sex, area / village, latest eGFR and Metformin dose per day. The app shows the patient card (name, HN, age, previous risk level, latest eGFR) and asks "ถูกต้อง · ถัดไป" or "สแกนใหม่" before continuing.
+   **Dose check (Part 1)** runs right after the patient is confirmed. If it fails, the flow stops here (see [Part 1](#part-1-metformin-dose-check-source-cpg)).
+2. **Weight** (step 2): numeric keypad, showing the previous weight and its date so staff can see the trend.
+3. **Height** (step 3): remembered from the last visit; BMI is calculated immediately.
+4. **Risk factors** (step 4): alcohol questions (Q9, Q9.2.1, Q9.2.2, with thresholds for the patient's sex) and the symptom and medicine questions (Q10–Q13), all answered Yes / No.
+5. **Review and save** (step 5): one summary screen showing the patient, eGFR, weight, height, BMI, the Part 1 dose result, the **Part 2 score with its reason**, and all answers. After "บันทึกและประเมินความเสี่ยง" the system saves the record. The whole process should take no more than 1–2 minutes per patient.
 
-### Automatic eGFR retrieval
+### Automatic eGFR and dose
 
-The latest eGFR (with its test date) is pulled from the hospital database by HN, so staff do not need to open another system or enter the value.
+The latest eGFR (with its test date) and the current Metformin dose come with the patient record, so staff do not need to open another system or type the values.
 
-### Risk engine (AI) and result screen
+### Risk engine and result screen
 
-On submission the system combines hospital data (eGFR) with the staff-entered data and:
+- **Part 1, dose check:** eGFR ≥ 45 **and** Metformin ≤ 2,000 mg/day = pass. Otherwise = fail (see below).
+- **Part 2, MALA risk score:** eGFR < 60 = 1 point, BMI < 23 = 2 points, heavy alcohol use = 2 points. **Score ≥ 2 = at risk.** The number of "yes" answers is not the score.
+- **Symptom and medicine answers (Q10–Q13)** are shown with the result. They are **not scored**.
+- The result gives **individualized advice** that staff can read to the patient. Advice emphasizes: avoid alcohol, the **Sick Day Rule** (stop the drug and contact the PCU when vomiting, diarrhea, or poor intake), warning symptoms that require going to the hospital immediately, adequate fluids, avoiding NSAIDs and unregulated medicines, and a repeat kidney-function check.
 
-- checks the Metformin dose against the CPG (see [Metformin dose vs. eGFR](#metformin-dose-vs-egfr-source-cpg)),
-- calculates the MALA risk score (see [Risk score](#risk-score-source-research)),
-- shows the score with the main contributing factors, and
-- generates **individualized advice** from the entered risk factors, which staff can read to the patient or print as a take-home sheet. Advice emphasizes: avoid alcohol, the **Sick Day Rule** (stop the drug and contact the PCU when vomiting, diarrhea, or poor intake), warning symptoms that require going to the hospital immediately, adequate fluids, avoiding NSAIDs and unregulated medicines, and a repeat kidney-function check.
+### Routing of results
 
-### Automatic alert to the multidisciplinary team
+| Result | What the system does |
+| --- | --- |
+| **Dose check fails** | Screen shows "ขนาดยาเกินเกณฑ์ · ส่งแพทย์ทันที": the **MALA assessment is stopped** and the case is **added to the doctor's queue right away** ("บันทึกเข้าคิวแพทย์แล้ว"). The system records and forwards the case only; it does not order the drug stopped in place of the doctor, and staff follow the doctor's instruction. |
+| **Dose passes, score ≥ 2 (at risk)** | The case goes to the **MALA case manager queue** ("คิวติดตาม"), not to the doctor. The PCU Staff screen has no "send to doctor" button and no doctor report. |
+| **Dose passes, score < 2** | The result is saved, follow-up continues on the usual schedule, and staff give the advice shown on screen. |
 
-When the risk exceeds the threshold, or the Metformin dose is inappropriate for the eGFR, the system sends an alert card to the team's LINE group. The card shows the patient, screening site and time, eGFR, BMI and weight, alcohol use, and the system's suggested action (for example, review the Metformin dose and repeat eGFR within 4 weeks). It includes **"Open case"** and **"Acknowledged"** buttons so the team can see who is handling it. Every alert is stored in the central database. This closes the communication gap between the PCU and the hospital within minutes, while the patient is still at the PCU.
+### LINE alert
 
-When risk is normal, the result is simply saved to the database, follow-up continues on the usual schedule, and the PCU Staff give the advice the app recommends.
+The LINE alert is **optional** and is handled on the case manager side by the hospital. It may not be connected in the prototype, and there is no LINE button for PCU Staff.
 
-### Offline fallback
+### Offline fallback (to be verified)
 
-If the internet is unavailable, staff fill in a paper form with the same items. When the connection returns, they photograph the form and upload it; the AI reads the form, records the data, and calculates the score and alert exactly as with on-screen entry.
+If the internet is unavailable, staff would fill in a paper form with the same items and enter it when the connection returns. Offline save with automatic sync, and AI reading of a photographed form, have not been seen in the prototype.
 
 ### Report
 
-A tabular report of all screenings, with the columns listed in [Report columns](#report-columns).
+A tabular report of all screenings, with the columns listed in [Report columns](#report-columns). The case manager dashboard has a "ดาวน์โหลด CSV" button.
 
 ## Screening criteria
 
-### Metformin dose vs. eGFR (source: CPG)
+### Part 1: Metformin dose check (source: CPG)
 
-| eGFR (mL/min/1.73 m²) | Maximum Metformin dose |
+| Condition | Result |
 | --- | --- |
-| ≥ 45 | ≤ 2,000 mg/day |
-| 30–44 | ≤ 1,000 mg/day |
-| < 30 | Contraindicated, do not use |
+| eGFR ≥ 45 **and** Metformin ≤ 2,000 mg/day | **Pass**, continue to the MALA assessment |
+| eGFR < 45 **or** Metformin > 2,000 mg/day | **Fail** |
 
-- **Criterion:** dose not appropriate per CPG.
-- **Management:** consult the physician to adjust the dose.
-- **System action:** automatic alert to the responsible physician. An eGFR below 30 should always be raised as the highest-priority alert.
+- **On fail:** stop the assessment, send the case to the doctor's queue immediately, and follow the doctor's instruction on the dose.
+- An eGFR below 30 is the most severe case (the screen says that below 30 the drug should be stopped and the doctor informed).
 
-### Risk score (source: research)
+### Part 2: MALA risk score (source: research)
 
 | Factor | Points |
 | --- | --- |
@@ -107,16 +117,16 @@ A tabular report of all screenings, with the columns listed in [Report columns](
 
 - **Criterion:** total score ≥ 2 means the patient is at risk of MALA.
 - **Management:** close monitoring; adjust the dose or stop Metformin; advise stopping alcohol; advise the Sick Day Rule.
-- **System action:** store the at-risk patient's data for clinical management and prompt the screener to advise the Sick Day Rule.
+- **System action:** the case goes to the MALA case manager queue, and the screener is prompted to advise the Sick Day Rule.
 
-### Triggering factors (source: research)
+### Triggering factors (source: research) — shown, not scored
 
 | Factor | Criterion | Management | System action |
 | --- | --- | --- | --- |
 | History of vomiting or diarrhea | Yes | Advise the Sick Day Rule | Prompt the screener to advise the Sick Day Rule |
-| Recent poor oral intake / temporary undernutrition | Yes | Advise the Sick Day Rule | Prompt the screener; optional chatbot that gives advice or acts as a consultant when the patient is unwell |
+| Recent poor oral intake / temporary undernutrition | Yes | Advise the Sick Day Rule | Same as above |
 
-### Factors that can induce acute kidney injury (source: evidence-based)
+### Factors that can induce acute kidney injury (source: evidence-based) — shown, not scored
 
 | Factor | Criterion | Management | System action |
 | --- | --- | --- | --- |
@@ -131,17 +141,17 @@ The same items are used on the paper form and in the web app.
 
 | # | Question | Answer |
 | --- | --- | --- |
-| 1 | HN (Chiangrai Prachanukroh Hospital) | Scanned / entered |
+| 1 | HN (Chiangrai Prachanukroh Hospital) | Scanned / chosen from the list / typed |
 | 2 | Full name | Pulled after HN confirmation |
 | 3 | Sex | Male / Female |
-| 4 | Age (years) | Number |
+| 4 | Age (years) | Pulled with the record; in manual entry calculated from the date of birth |
 | 5 | Weight (kg) | Number |
 | 6 | Height (cm) | Number (reused after first entry) |
 | 7 | Latest eGFR in HIS | Pulled automatically |
-| 8 | Current Metformin dose (mg/day) | Number |
-| 9.1 | Does the patient drink alcohol? | Yes / No |
-| 9.2.1 | Heavy drinking in a short period? (Male > 5 standard drinks, Female > 4 standard drinks, within 2 hours) | Yes / No |
-| 9.2.2 | Regular or continuous heavy drinking? (Male > 15 standard drinks/week, Female > 8 standard drinks/week) | Yes / No |
+| 8 | Current Metformin dose (mg/day) | Pulled from the recorded data |
+| 9 | Does the patient drink alcohol? | Yes / No |
+| 9.2.1 | Heavy drinking in a short period? (Male ≥ 5 standard drinks, Female ≥ 4 standard drinks, within 2 hours) | Yes / No |
+| 9.2.2 | Regular or continuous heavy drinking? (Male ≥ 15 standard drinks/week, Female ≥ 8 standard drinks/week) | Yes / No |
 | 10 | Recent vomiting or diarrhea? | Yes / No |
 | 11 | Unable to eat, or eating much less, for 1–2 days in a row? | Yes / No |
 | 12 | Takes painkillers, anti-inflammatories, or "yaa chud"? | Yes / No |
@@ -161,31 +171,49 @@ Questions 9.2.1 and 9.2.2 are supported by a standard-drink conversion table (1 
 | BMI | Calculated from Q5 and Q6 |
 | eGFR | Q7 |
 | Metformin dose | Q8 |
-| Dose not appropriate | System (dose rule) |
+| Dose check result (pass / fail) | System (Part 1) |
 | eGFR < 60 | System |
 | BMI < 23 | System |
-| Alcohol use | Q9.2.1 / Q9.2.2 |
-| At risk of MALA | System (risk score) |
+| Alcohol use | Q9 / Q9.2.1 / Q9.2.2 |
+| Part 2 score and at risk of MALA | System |
 | Dehydration (vomiting/diarrhea) | Q10 |
 | Poor oral intake | Q11 |
 | NSAIDs | Q12 |
 | Herbal / supplements | Q13 |
+| Routed to | System (doctor queue / case manager queue / none) |
 | Screening site | System |
 
 ## System workflow
 
-1. **Screening**: PCU Staff scan the HN and enter weight, height, alcohol use, and the symptom and medication questions at the point of dispensing.
-2. **Central database**: the screening record (with who entered it and when) is saved for every patient.
-3. **Risk assessment**: the system fetches the latest eGFR, checks the dose against the CPG, and calculates the score against the standard criteria.
-4. **Alert or record**: if risk exceeds the threshold, an alert goes to the LINE group and the team opens a case; if risk is normal, the result is saved and staff give the individualized advice shown on screen.
-5. **Follow-up**: the PCU and the hospital see the same data and follow up the patient accordingly.
+1. **Identify the patient**: PCU Staff scan the HN, pick the patient from the list, import a list, or add the patient by hand, then confirm the patient.
+2. **Dose check (Part 1)**: the system uses the eGFR and Metformin dose on record and applies the CPG rule.
+   - **Fail:** the MALA assessment stops and the case goes to the doctor's queue immediately.
+   - **Pass:** continue.
+3. **Data entry**: staff enter weight, height, alcohol use, and the symptom and medicine answers.
+4. **MALA assessment (Part 2)**: the system calculates the score; the review screen shows it with its reason. Score ≥ 2 = at risk.
+5. **Routing**: an at-risk case goes to the MALA case manager queue; a case that is not at risk is saved and staff give the advice shown on screen.
+6. **Follow-up**: the hospital (physician and case manager) takes over the follow-up of the cases it receives; these screens are mockups in the prototype.
+7. **Central database**: every screening record (with who entered it and when) is saved.
+
+## Case manager dashboard
+
+The case manager screen "คิวติดตามกลุ่มเสี่ยง MALA" has two tabs: "แดชบอร์ด/รายงาน" and "คิวติดตาม" (with a count of waiting cases). The dashboard shows (mockup):
+
+- **ตรวจขนาดยา · Part 1:** number of dose checks, how many passed and how many were sent to the doctor for review
+- **ประเมินความเสี่ยง · Part 2:** number of assessments and how many scored as at risk
+- **สัดส่วน Part 2 ที่เข้าเกณฑ์เสี่ยง:** share at risk (for example 9 of 10 = 90%)
+- **ผู้ป่วยที่มีผลบันทึก:** share of the listed patients with a recorded result (for example 12 of 30 = 40%)
+- **พื้นที่ที่พบเคสเข้าเกณฑ์เสี่ยง:** area with the most at-risk cases, then by village
+- **Community guidance:** how many times painkillers / anti-inflammatories and herbal / supplements were reported
+- The main indicators count only Part 1 and Part 2; nausea / vomiting is not included. A "ดาวน์โหลด CSV" button exports the data.
 
 ## Expected benefits
 
 1. **Prevent severe complications**: screen for MALA risk from the start, before harm occurs.
-2. **Complete, auditable data**: every dispensing has a screening record in the central database for continuing care planning.
-3. **Timely automatic alerts**: less manual assessment for staff; risk is flagged as soon as it is found.
-4. **Connected data across units**: the PCU and the hospital see the same dataset, reducing communication errors.
+2. **Unsafe doses stopped early**: the dose check runs first, so a dose-fail patient is not assessed any further and the doctor receives the case at once.
+3. **Complete, auditable data**: every dispensing has a screening record in the central database for continuing care planning.
+4. **Automatic routing**: less manual work for staff; at-risk cases reach the case manager without an extra step.
+5. **Connected data across units**: the PCU and the hospital see the same dataset, reducing communication errors.
 
 ## Cost and rollout
 
@@ -195,13 +223,19 @@ Questions 9.2.1 and 9.2.2 are supported by a standard-drink conversion table (1 
 
 ## Data protection
 
-The system handles identifiable patient data and sends patient names to a messaging group, so it should follow the Personal Data Protection Act (PDPA) and hospital policy: encrypted storage and transfer, access limited to authorized staff, and a log of every entry and alert (who and when). Confirm with the hospital whether patient names and HN may be posted in LINE groups, or whether the alert should show only HN or a masked name.
+The system handles identifiable patient data, so it should follow the Personal Data Protection Act (PDPA) and hospital policy: encrypted storage and transfer, access limited to authorized staff, and a log of every entry and alert (who and when). If the LINE alert is connected, confirm with the hospital whether patient names and HN may be posted in LINE groups, or whether the alert should show only HN or a masked name.
+
+## Testing
+
+The test plan is in [Test_Plan_MediNova.md](Test_Plan_MediNova.md) (version 1.1). The user acceptance test with PCU Staff is scheduled for **Tuesday, November 17, 2026**. This round covers the PCU Staff role only; the physician and case manager screens are checked only for what they display and where cases arrive.
 
 ## Open items
 
-1. **Score scale.** The criteria workbook scores 0–5 with an alert at ≥ 2, while the demo slides show a score of 72 against a threshold of 60. This document follows the workbook; the demo screens need to be changed to match, or a conversion to a 0–100 scale defined.
-2. **Definition of "heavy alcohol use" (2 points).** The workbook gives no exact rule. Suggested: Yes to Q9.2.1 or Q9.2.2. The demo's four-level alcohol selector should be aligned with Q9.1 to 9.2.2.
-3. **Missing demo fields.** The demo screens do not yet include Metformin dose (Q8, needed for the CPG rule), age and sex, or Questions 10 to 13.
-4. **eGFR range wording.** The demo labels the range 30–45; the CPG range used here is 30–44.
-5. **Incidence figure.** The slide states 137–871 MALA cases per 100,000 people per year, which looks high compared with the usual literature; verify the source before presenting.
-6. **Previous draft features removed.** The earlier draft described village health volunteers, a three-colour dashboard, physician orders with one-click dose logging, and audible pop-up alerts. None of these are in the requirements and they were removed; they can return as future phases if wanted.
+1. **Metformin dose rule for eGFR 30–44.** The CPG table allowed up to 1,000 mg/day at eGFR 30–44. The agreed design fails the dose check whenever eGFR < 45, while the dose-fail screen says that below 30 the drug should be stopped. Confirm the intended rule with the mentor.
+2. **Definition of "heavy alcohol use" (2 points).** The prototype scored 2 points when regular heavy drinking (Q9.2.2) was answered Yes. Confirm with the mentor that Yes to Q9.2.1 or Q9.2.2 is the intended rule.
+3. **Old three-level labels.** The patient list still shows "ความเสี่ยงต่ำ / เสี่ยงปานกลาง / เสี่ยงสูง" from an earlier version; these labels are not part of the Part 1 / Part 2 flow and should be removed or renamed.
+4. **Volunteer wording on screen.** The review screen still shows "บันทึกโดย อสม. ประจำหมู่ 1" and one dashboard guidance text refers to อสม.; replace with PCU Staff wording.
+5. **% of patients the system helped.** The mentor left the definition open; the dashboard currently shows "ผู้ป่วยที่มีผลบันทึก" (share of listed patients with a recorded result) instead.
+6. **Offline fallback and camera OCR.** Not yet confirmed in the prototype.
+7. **Incidence figure.** The slide states 137–871 MALA cases per 100,000 people per year, which looks high compared with the usual literature; verify the source before presenting.
+8. **Features not in this prototype.** The three-colour tier dashboard, the physician's one-click dose logging, and audible pop-up alerts are not part of this prototype; the hospital may add them later.
