@@ -17,7 +17,7 @@ Sub-district Health-Promoting Hospital (SHPH / รพ.สต.) Risk Screening We
 
 *Team of 4 — no separate Tech Lead; development ownership is shared across the team, led by the Product Owner.*
 
-> ✅ **Status of v1.1:** the screen details below were checked against the live prototype (mala-project-2026.web.app) on November 15, 2026 for the SHPH screening flow (login, patient selection, manual-entry form, dose-fail result, weight, height, risk factors, review screen) and for the case manager dashboard screen. Items marked "to verify" were not reachable in that check (physician screens, the case manager queue tab contents, the result screen after saving, offline mode). Each test case must still be marked Pass/Fail by actually running it.
+> **Status of v1.1:** the screen details below were checked against the live prototype (mala-project-2026.web.app) on November 15, 2026 for the SHPH screening flow (login, patient selection, manual-entry form, dose-fail result, weight, height, risk factors, review screen) and for the case manager dashboard screen. Items marked "to verify" were not reachable in that check (physician screens, the case manager queue tab contents, the result screen after saving, offline mode). Each test case must still be marked Pass/Fail by actually running it.
 
 ---
 
