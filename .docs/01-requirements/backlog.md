@@ -1,13 +1,13 @@
 # Product Backlog: MALA Risk Screening & Monitoring System
 
-**Version:** 1.2 (revises the original backlog)
+**Version:** 1.3 (revises the original backlog)
 **Date Revised:** November 16, 2026
 
 All user stories are derived from the domain requirements and user pain points identified at the Chiangrai Prachanukroh Hospital network, and from the design changes agreed with the mentor. The acceptance criteria follow the prototype at https://mala-project-2026.web.app.
 
 > **Scope note:** The prototype implements the **SHPH (รพ.สต.) screening flow** in full. The **physician** and **MALA case manager** screens are **mockups** only (display and routing). The hospital takes them over and implements the real functions.
 >
-> **Verification note:** On November 16, 2026 the SHPH screens (steps 1–5 and the dose-fail screen) were re-checked on the live site. The result screen after saving, the physician screen and the case manager screen were last checked on November 15, 2026 and are marked "to be verified".
+> **Verification note:** On November 16, 2026 the SHPH screens (steps 1–5, the dose-fail screen and the result screen after saving) and the case manager screens (dashboard and queue) were re-checked on the live site. The physician screen and the exact messages for eGFR below 30 and for a dose above 2,000 mg/day at eGFR ≥ 45 were not re-tested and are marked "to be verified".
 
 ---
 
@@ -16,7 +16,7 @@ All user stories are derived from the domain requirements and user pain points i
 | Area | Original | v1.2 |
 |---|---|---|
 | Roles | Community data collector, primary care nurse, physician | **SHPH staff**, **Physician (mockup)**, **MALA case manager / administrator (mockup, one role)** |
-| Order of checks | Risk tiers (Green / Yellow / Red) from several factors | **Dose check first** (Part 1, CPG table); MALA assessment (Part 2) only if the dose check passes |
+| Order of checks | Risk tiers (Green / Yellow / Red) from several factors | **Dose check first** (Part 1, CPG table, confirmed by the team); MALA assessment (Part 2) only if the dose check passes |
 | Risk output | Three tiers | Dose pass / fail, then Part 2 additive score (**at risk when score ≥ 2**) |
 | Where a case goes | Red tier → physician with pop-up and sound | Dose fail → **doctor's queue immediately**; at risk → **MALA case manager queue** |
 | Physician actions | Dose order, audit trail, role-based access | Out of this prototype (hospital implements) |
@@ -67,7 +67,7 @@ The screening flow has 5 steps: 1 scan HN, 2 weight, 3 height, 4 risk factors, 5
   - **Fail:** the screen shows "ขนาดยาเกินเกณฑ์ · ส่งแพทย์ทันที" with the reason (for example "eGFR 30–44 แต่ขนาดยา 2,000 มก./วัน ซึ่งเกินเกณฑ์ไม่เกิน 1,000 มก./วัน; แจ้งแพทย์ผู้รับผิดชอบทบทวน"), the MALA assessment is stopped ("หยุดการประเมินความเสี่ยง MALA ไว้ก่อน"), and the case is added to the doctor's queue ("บันทึกเข้าคิวแพทย์แล้ว").
   - The screen tells staff to follow the doctor's order about stopping or adjusting the drug; the system records and forwards the case only.
   - A dose-fail case does not enter the case manager queue.
-  - Not re-tested on November 16: the exact messages for eGFR below 30 and for a dose above 2,000 mg/day at eGFR ≥ 45 (to be verified).
+  - Not re-tested: the exact messages for eGFR below 30 and for a dose above 2,000 mg/day at eGFR ≥ 45 (to be verified). Both are expected to fail under the CPG table.
 
 - **US-04 (Data entry):**
   - Step 2: weight uses a numeric keypad and shows the previous weight and its date (for example "ครั้งก่อน 58 กก. (12 มิ.ย. 2569)").
@@ -79,43 +79,51 @@ The screening flow has 5 steps: 1 scan HN, 2 weight, 3 height, 4 risk factors, 5
 - **US-05 (MALA Part 2 score):**
   - Score = (eGFR < 60 → 1) + (BMI < 23 → 2) + (heavy alcohol → 2); **score ≥ 2 = at risk**.
   - The review screen shows the Part 1 result and the Part 2 score with its reason (for example "1 คะแนน · ต่ำกว่าเกณฑ์เสี่ยง" or "4 คะแนน · เข้าเกณฑ์เสี่ยง") and the scoring line "eGFR <60 = 1 · BMI <23 = 2 · ดื่มหนัก = 2 · ตั้งแต่ 2 คะแนนถือว่าเสี่ยง".
-  - A summary line above the details tells staff that the number of "yes" answers is not the score and to read the Part 2 score by criteria below (for example "ทุกข้อที่ตอบเป็นไม่ใช่").
+  - A yellow summary line above the details shows how many answers are "yes" (for example "มีคำตอบใช่ 7 ข้อ") and says that this number is not the Part 2 score; the score is read by the criteria below it.
   - Q10–Q13 are shown as answers and do not change the score.
 
 - **US-06 (Routing of at-risk cases):**
   - After saving ("บันทึกและประเมินความเสี่ยง"), an at-risk case goes to the case manager queue and does **not** go to the doctor.
+  - The result screen shows a banner "ส่งเข้าคิวผู้ดูแลเคส MALA แล้ว" and says the case is not sent to the doctor's queue from the MALA score alone.
   - The SHPH screen has no "send to doctor" button, no doctor report and no LINE button.
-  - Exact queue contents and status wording are to be verified on the prototype.
 
 - **US-07 (Guidance):**
   - A case that is not at risk is saved with guidance and is not queued for the case manager.
   - Guidance is **rule-based** (fixed rules, no trained AI model). It covers reviewing eGFR and dose, advice for heavy drinking, advice during illness or fasting, and the use of painkillers or herbal medicine.
   - When vomiting or diarrhea is present, the Sick Day Rule warning is shown.
   - "เสร็จสิ้น · สแกนผู้ป่วยรายถัดไป" returns to step 1 with no data left from the previous patient.
-  - The result screen after saving is to be verified.
+  - The result screen after saving (checked on November 16) shows four cards: Part 1 dose check (dose on record and eGFR), Part 2 score with the score of each criterion, Part 3 Sick Day Rules, and Part 4 AKI triggers / medicine review. A "คำแนะนำสำหรับผู้ป่วย" card follows, then the routing banner.
 
 - **US-08 (Physician mockup):**
   - The physician screen lists dose-fail cases; at-risk cases do not appear there. To be verified.
 
 - **US-09 (Case manager mockup):**
-  - Login with the role "ผู้ดูแลเคส MALA" opens "คิวติดตามกลุ่มเสี่ยง MALA" marked "ผู้ดูแลเคส · ไม่ใช่คิวแพทย์", with the tabs "แดชบอร์ด/รายงาน" and "คิวติดตาม" (with a count of waiting cases). Checked on November 15.
+  - Login with the role "ผู้ดูแลเคส MALA" opens "คิวติดตามกลุ่มเสี่ยง MALA" marked "ผู้ดูแลเคส · ไม่ใช่คิวแพทย์", with the tabs "แดชบอร์ด/รายงาน" and "คิวติดตาม" (with a count of waiting cases).
+  - The queue has the tabs "รอดำเนินการ" and "จัดการแล้ว", a search box, and for each case an expandable detail view, the screening history with time, and a "จัดการแล้ว" button that moves the case to the handled tab. This is display only; care planning and follow-up stay with the hospital. Checked on November 16.
 
 - **US-10 (Dashboard, mockup):**
   - Shows dose checks (Part 1): total, passed, and sent to the doctor.
-  - Shows MALA assessments (Part 2): total, how many at risk, and the share at risk (for example 9 of 10 = 90%).
-  - Shows "ผู้ป่วยที่มีผลบันทึก": share of listed patients with a recorded result (for example 12 of 30 = 40%). The mentor left the definition of "% of patients the system helped" open.
+  - Shows MALA assessments (Part 2): total, how many at risk, and the share at risk (for example 3 of 3 = 100%).
+  - Shows "ผู้ป่วยที่มีผลบันทึก": share of listed patients with a recorded result (for example 4 of 30 = 13%). The mentor left the definition of "% of patients the system helped" open.
   - Shows the areas with at-risk cases (most cases first, then by village) and community guidance counts for painkillers / anti-inflammatories and herbal / supplements.
   - The main indicators count only Part 1 and Part 2; nausea / vomiting is not included.
-  - A "ดาวน์โหลด CSV" button exports the data. Checked on November 15.
+  - A "ดาวน์โหลด CSV" button exports the data. Checked on November 16.
+  - The counts on the dashboard include every test run kept in the prototype. Clear the test data before UAT (see Section 3).
 
 ---
 
 ## 3. Known Issues to Fix on the Prototype
 
-- The review screen (step 5) still shows "บันทึกโดย อสม. ประจำหมู่ 1"; replace with SHPH Staff wording. A dashboard guidance text that mentions อสม. was seen on November 15 and is to be re-checked.
-- The patient list and the patient card still show the old three-level labels ("ความเสี่ยงต่ำ / เสี่ยงปานกลาง / เสี่ยงสูง", "ระดับความเสี่ยงเดิม"), which are not part of the new Part 1 / Part 2 flow.
-- The prototype applies the CPG table (eGFR 30–44 passes up to 1,000 mg/day), but the design agreed earlier failed any eGFR below 45. Confirm which rule the mentor wants, then change either the documents or the prototype.
-- The prototype has no consent step before screening.
+Checked on the live site on November 16, 2026. Fix these before the UAT on November 17 where possible.
+
+- **Volunteer wording (อสม.) still shown in two places:** the review screen (step 5) shows "บันทึกโดย อสม. ประจำหมู่ 1" (replace with "บันทึกโดย" plus the logged-in user ID, for example SHPH001), and the dashboard guidance card for painkillers / anti-inflammatories says "ปรึกษา อสม. หรือบุคลากรสุขภาพ" (replace with SHPH staff or health personnel).
+- **Old tier label:** the screening history on the case manager screen still shows the label "Yellow" from the old three-level system. Remove or rename it.
+- **Old three-level labels:** the patient list and the patient card still show "ความเสี่ยงต่ำ / เสี่ยงปานกลาง / เสี่ยงสูง" and "ระดับความเสี่ยงเดิม", which are not part of the Part 1 / Part 2 flow.
+- **Duplicate unit:** the Metformin line reads "1 เม็ด/วัน (500 มก.) มก./วัน" with "มก." twice.
+- **Sparkle icon on the advice card:** the "คำแนะนำสำหรับผู้ป่วย" card uses a sparkle icon that suggests AI, but the advice is rule-based. Use a neutral icon.
+- **Dashboard denominator:** "จาก 30 รายชื่อในระบบ" always uses 30 and ignores patients added by hand or by Excel import.
+- **No consent step** before screening.
+- **Test data in the prototype:** test patients (for example TEST-001, TEST-A, TEST-B) and the team's test runs are counted on the dashboard. Clear all of them before the UAT so that the numbers show only real test sessions.
 
 ---
 
