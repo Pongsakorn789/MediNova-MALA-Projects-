@@ -2,7 +2,7 @@
 **Project:** MALA Risk Screening & Monitoring System (MRSS) — Web Application
 **Company:** MediNova · **Course:** 1305493 Software Engineering Case Studies
 **Phase:** DISCOVER (W1–W5) → binding rules for the BUILD phase
-**Status:** Draft v3.2, revised November 16, 2026 (aligned with the Project Charter, MALA_outline_prg.xlsx, MALA_Screening_Checklist.docx, and the prototype at https://mala-project-2026.web.app, re-checked on November 16, 2026)
+**Status:** Draft v3.3, revised November 16, 2026 (aligned with the Project Charter, MALA_outline_prg.xlsx, MALA_Screening_Checklist.docx, and the prototype at https://mala-project-2026.web.app, re-checked on November 16, 2026)
 
 > **MUST / MUST NOT** = mandatory, **SHOULD** = recommended. Every backlog feature must trace back to a rule in this file (see Section 12).
 > This system is a **proof-of-concept decision-support tool**, not a diagnostic device.
@@ -22,7 +22,7 @@
 - Health data is **Sensitive Data** under the Personal Data Protection Act B.E. 2562 (PDPA), Section 26.
 - During DISCOVER and testing, the team uses patient data supplied by the hospital with its permission; patients' ID card numbers were removed before use (HN, name, sex, age and clinical values remain). Any other real patient data **MUST NOT** be used. The data **MUST** be used only for this course project, **MUST** be stored only in the project's controlled environment, and **MUST NOT** be posted in the repository, chat tools or external AI tools. Integration with HosXP / live hospital databases is out of scope.
 - The prototype can import a patient list from an Excel file. It reads HN, name, sex, age and eGFR (and the area when the file has one). The file is read in the browser and is not sent to a backend. Only the hospital-approved data set may be imported; other real patient lists **MUST NOT** be used in the prototype or in testing.
-- Test patients entered by hand (for example "ทดสอบ ระบบ", HN TEST-001) **MUST** use invented values only and be removed from the prototype data before a demo or hand-over.
+- Test patients entered by hand (for example "ทดสอบ ระบบ", HN TEST-001) **MUST** use invented values only. They and the test runs saved with them **MUST** be removed from the prototype data before the UAT, a demo or hand-over, because the dashboard counts them.
 
 ---
 
@@ -156,15 +156,15 @@ The system may connect to hospital infrastructure subject to the Cybersecurity A
 
 **Order of checks:** Part 1 (dose) runs first, when the staff member confirms the patient in step 1. If it fails, the MALA assessment is skipped and the case goes to the doctor's queue. If it passes, Part 2 is calculated.
 
-**Part 1 — eGFR vs Metformin dose (CPG table, as implemented in the prototype)**
+**Part 1 — eGFR vs Metformin dose (CPG table, as implemented in the prototype and chosen by the team)**
 | Condition | Result |
 |---|---|
 | eGFR ≥ 45 and Metformin ≤ 2,000 mg/day | Pass |
 | eGFR 30–44 and Metformin ≤ 1,000 mg/day | Pass ("ตาม CPG ที่ให้มา") |
 | eGFR 30–44 and Metformin > 1,000 mg/day | Fail → stop the assessment, send the case to the doctor's queue immediately (tested on November 16 with eGFR 40 and 2,000 mg/day) |
-| Metformin > 2,000 mg/day, or eGFR < 30 | Fail (from the CPG table; the exact screen text was not re-tested on November 16) |
+| Metformin > 2,000 mg/day, or eGFR < 30 | Fail (from the CPG table; the exact screen text was not re-tested) |
 
-The prototype applies the CPG table above. The design agreed earlier failed the dose check for **any eGFR below 45**. The two rules give different results for eGFR 30–44 with a dose of 1,000 mg/day or less; the clinical team **MUST** confirm which rule applies (see 7.4 and Section 13).
+The team uses this CPG table as the dose rule. The clinical team **SHOULD** still confirm the limits when the criteria are validated (see 7.4, item 5).
 
 **Part 2 — Risk score (research)**
 | Factor | Points |
@@ -191,10 +191,12 @@ Vomiting/diarrhea (Q10), unable to eat or eating less for 1–2 days (Q11), NSAI
 | 3 | Demo had 5 steps with no sex/age, Metformin dose, or symptom/medication questions | Slides 1–5 vs checklist | **Resolved in the prototype:** Metformin dose and Q10–Q13 are included, and sex sets the alcohol thresholds. |
 | 4 | "AI calculates Risk Score" in slides conflicts with the deterministic principle | Slide 5 | **Resolved:** the rule engine calculates the score and advice is rule-based; the prototype uses no trained AI model |
 | 5 | eGFR/score criteria not yet reviewed by clinical experts | Charter Sec. 10 | Label "PoC — not clinically validated"; do not use for real patient care until validated |
-| 6 | Dose rule for eGFR 30–44: the prototype applies the CPG table (pass up to 1,000 mg/day) while the agreed design failed any eGFR below 45 | Prototype vs agreed design | Confirm with the mentor / clinical team, then change the documents or the prototype |
-| 7 | The patient list and the patient card still show old three-level labels ("ความเสี่ยงต่ำ / เสี่ยงปานกลาง / เสี่ยงสูง", "ระดับความเสี่ยงเดิม") that are not part of Part 1 / Part 2 | Prototype | Remove or rename the labels |
-| 8 | The review screen (step 5) still shows "บันทึกโดย อสม. ประจำหมู่ 1" | Prototype (seen November 16) | Replace with SHPH Staff wording |
-| 9 | The prototype has no consent step | Prototype | Add a consent step before screening (see 3.1) |
+| 6 | The patient list and the patient card still show old three-level labels ("ความเสี่ยงต่ำ / เสี่ยงปานกลาง / เสี่ยงสูง", "ระดับความเสี่ยงเดิม"), and the case manager history shows "Yellow", none of which are part of Part 1 / Part 2 | Prototype (seen November 16) | Remove or rename the labels |
+| 7 | Volunteer wording (อสม.) is still shown on the review screen ("บันทึกโดย อสม. ประจำหมู่ 1") and in the dashboard guidance card | Prototype (seen November 16) | Replace with "บันทึกโดย" plus the logged-in user ID, and with SHPH staff / health personnel |
+| 8 | The prototype has no consent step | Prototype | Add a consent step before screening (see 3.1) |
+| 9 | The advice card uses a sparkle icon that suggests AI, while the advice is rule-based (7.1 principle 2) | Prototype (seen November 16) | Use a neutral icon |
+| 10 | The dose line shows the unit twice ("(500 มก.) มก./วัน"), and the dashboard denominator (30) ignores patients added by hand or by import | Prototype (seen November 16) | Correct the text and the count |
+| 11 | Test data from the team's runs is counted on the dashboard | Prototype | Clear it before the UAT (see Section 1) |
 
 ### 7.5 Criteria governance and versioning
 - All criteria **MUST** live in versioned configuration, not hard-coded across the codebase.
@@ -267,7 +269,7 @@ Compliance-related KPIs: ≥ 80% of Metformin patients screened via the system (
 2. Cloud and LINE providers: server location (including the hosting of the web app), DPA, and whether the advice service is run by the team or a third party. The current design uses no external AI model; if one is added, confirm whether our data may be used for model training.
 3. Retention periods per the hospital's medical-record policy.
 4. Hospital's CII status and HosXP integration requirements.
-5. Expert validation of eGFR/risk-score criteria, and resolution of the inconsistencies in 7.4 (especially the eGFR 30–44 dose rule and the heavy-alcohol logic).
+5. Expert validation of eGFR/risk-score criteria (including the CPG dose limits), and resolution of the inconsistencies in 7.4 (especially the heavy-alcohol logic).
 6. Verify the ETA citations (Sec. 9 vs 11) and finalize the real Privacy Notice / Consent documents; add a consent step to the screening flow.
 7. LINE alert: decide whether the hospital connects it and whether the card shows the patient's full name.
 8. ID card number: the hospital data set had patients' ID card numbers removed. The prototype search and manual-entry form still accept an ID card number; decide whether to use HN only (preferred under data minimization) or justify collecting it.
