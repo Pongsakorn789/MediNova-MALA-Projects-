@@ -1,12 +1,12 @@
 # Test Plan — MRSS (MALA Risk Screening & Monitoring System)
 Sub-district Health-Promoting Hospital (SHPH / รพ.สต.) Risk Screening Web Application
 
-**Version:** 1.2 (revises v1.0 of October 28, 2026)
+**Version:** 1.3 (revises v1.0 of October 28, 2026)
 **Date Revised:** November 16, 2026
 **UAT Date:** Tuesday, November 17, 2026 (the instructor tests the system; replaces November 4 in v1.0)
 **System under test (prototype):** mala-project-2026.web.app
 
-**AI Disclosure:** AI was used to help draft the structure, tables, and initial test-case wording of this document, based on the team's backlog, proposal, and workflow documentation. The v1.1 and v1.2 revisions were drafted with AI from the team's notes on the design changes agreed with the mentor and from a check of the live prototype. All content must be reviewed by the team. The system under test uses fixed rules for its risk results and advice and does not use a trained AI model.
+**AI Disclosure:** AI was used to help draft the structure, tables, and initial test-case wording of this document, based on the team's backlog, proposal, and workflow documentation. The v1.1, v1.2 and v1.3 revisions were drafted with AI from the team's notes on the design changes agreed with the mentor and from a check of the live prototype. All content must be reviewed by the team. The system under test uses fixed rules for its risk results and advice and does not use a trained AI model.
 
 | Role | Name | Student ID |
 |---|---|---|
@@ -17,7 +17,7 @@ Sub-district Health-Promoting Hospital (SHPH / รพ.สต.) Risk Screening We
 
 *Team of 4 — no separate Tech Lead; development ownership is shared across the team, led by the Product Owner.*
 
-> **Status of v1.2:** the screen details below were checked against the live prototype (mala-project-2026.web.app) on November 16, 2026 for the SHPH screening flow (login, patient list, manual-entry form, patient confirmation, dose check pass and dose-fail result, weight, height, risk factors, review screen). The case manager dashboard screen was checked on November 15, 2026. Items marked "to verify" were not reached in these checks (physician screens, the case manager queue tab contents, the result screen after saving, the Excel import, offline mode). Each test case must still be marked Pass/Fail by actually running it.
+> **Status of v1.3:** the screen details below were checked against the live prototype (mala-project-2026.web.app) on November 16, 2026: the SHPH screening flow (login, patient list, manual-entry form, patient confirmation, dose check pass and dose-fail result, weight, height, risk factors, review screen, result screen after saving) and the case manager screens (dashboard, queue, handled tab). Items marked "to verify" were not reached in these checks (physician screens, the Excel import, offline mode, the dose-fail screens for eGFR below 30 and for a dose above 2,000 mg/day at eGFR 45 or higher). Each test case must still be marked Pass/Fail by actually running it.
 
 ---
 
@@ -67,14 +67,14 @@ Verify that the SHPH staff role can complete the MALA screening workflow correct
 - Everything else on the physician screens (dose order form, digital signature, alarm settings, full patient list with search and filters) is a mockup the hospital will replace; these are **not** tested in this plan
 
 **In scope — MALA case manager role (mockup only)**
-- Login with role "ผู้ดูแลเคส MALA" opens a screen titled "คิวติดตามกลุ่มเสี่ยง MALA" marked "ผู้ดูแลเคส · ไม่ใช่คิวแพทย์", with two tabs: "แดชบอร์ด/รายงาน" and "คิวติดตาม" (a number badge shows how many cases wait). The queue lists at-risk cases (dose passed, Part 2 score ≥ 2) — contents of the queue tab to verify
-- Open a case: patient information, itemized Part 2 score, and the factors found (e.g. NSAID, herbal, ยาชุด)
+- Login with role "ผู้ดูแลเคส MALA" opens a screen titled "คิวติดตามกลุ่มเสี่ยง MALA" marked "ผู้ดูแลเคส · ไม่ใช่คิวแพทย์", with two tabs: "แดชบอร์ด/รายงาน" and "คิวติดตาม" (a number badge shows how many cases wait). The queue lists at-risk cases (dose passed, Part 2 score ≥ 2) in the tabs "รอดำเนินการ" and "จัดการแล้ว", with a search box
+- Open a case: patient information, itemized Part 2 score, the factors found (e.g. NSAID, herbal, ยาชุด) and the screening history with time; a "จัดการแล้ว" button moves the case to the handled tab
 - Follow-up after receiving the case (care plan, LINE alert, follow-up, closing the case) is done by the hospital and is **not** part of the prototype
 
 **In scope — dashboard metrics for the MALA case manager / administrator (mockup)**
 - Dose checks (Part 1): how many were done, how many passed and how many were sent to the doctor for review
-- MALA assessments (Part 2): how many were done, how many scored as at risk, and the share at risk (example on screen: 10 assessments, 9 at risk, 90%)
-- "ผู้ป่วยที่มีผลบันทึก": share of the listed patients that have a recorded screening result (example on screen: 12 of 30, 40%). This is what the screen shows in place of a "% of patients the system helped" figure, whose exact definition the mentor left open.
+- MALA assessments (Part 2): how many were done, how many scored as at risk, and the share at risk (example on screen: 3 assessments, 3 at risk, 100%)
+- "ผู้ป่วยที่มีผลบันทึก": share of the listed patients that have a recorded screening result (example on screen: 4 of 30, 13%). This is what the screen shows in place of a "% of patients the system helped" figure, whose exact definition the mentor left open.
 - Areas with at-risk cases (most cases first, then by village — counted from Part 2 assessments that scored 2 or more) and community guidance counts: painkillers / anti-inflammatories and herbal / supplements. The screen says the main indicators count only Part 1 and Part 2 and do not include nausea / vomiting. A "ดาวน์โหลด CSV" button exports the data.
 
 **In scope — not yet confirmed on screen; verify before final test-case pass**
@@ -126,23 +126,27 @@ The team will perform four levels of testing following the Testing Pyramid, per 
 | TC19 | Vomiting / diarrhea and poor intake (Q10, Q11) | Answer "ใช่" or "ไม่ใช่" to Q10 and Q11 | Q10 = yes | The answers are saved and shown on the review screen; they do not change the Part 2 score | Pending |
 | TC20 | Painkillers and herbal use (Q12, Q13) | Answer "ใช่" or "ไม่ใช่" to Q12 (painkillers / anti-inflammatories / ยาชุด) and Q13 (herbal medicine / supplements) | Q12 = yes | The answers are shown on the review screen; they do not change the Part 2 score and are counted in the community guidance on the case manager dashboard | Pending |
 | TC21 | Review screen accuracy | Complete steps 1–4 and reach step 5 "ตรวจทานข้อมูล" | HN 45-021734, weight 58 kg, height 158 cm, all answers "ไม่ใช่" | Patient, eGFR (38), weight (58), height (158), BMI (23.23), the Part 1 result "ขนาดยาอยู่ในเกณฑ์", the Part 2 score "1 คะแนน · ต่ำกว่าเกณฑ์เสี่ยง", and all answers are shown correctly | Pending |
-| TC22 | Part 2 score on review and after saving | Check the Part 2 box on the review screen, then tap "บันทึกและประเมินความเสี่ยง" | eGFR 68 (0), BMI 20.9 (2), regular heavy drinking (2) | Review screen shows "4 คะแนน · เข้าเกณฑ์เสี่ยง" with the rule "eGFR <60 = 1 · BMI <23 = 2 · ดื่มหนัก = 2 · ตั้งแต่ 2 คะแนนถือว่าเสี่ยง"; the result screen after saving is to verify | Pending |
+| TC22 | Part 2 score on review and after saving | Check the Part 2 box on the review screen, then tap "บันทึกและประเมินความเสี่ยง" | eGFR 68 (0), BMI 20.9 (2), regular heavy drinking (2) | Review screen shows "4 คะแนน · เข้าเกณฑ์เสี่ยง" with the rule "eGFR <60 = 1 · BMI <23 = 2 · ดื่มหนัก = 2 · ตั้งแต่ 2 คะแนนถือว่าเสี่ยง"; after saving, the result screen shows the cards Part 1 to Part 4, the "คำแนะนำสำหรับผู้ป่วย" card, and the banner "ส่งเข้าคิวผู้ดูแลเคส MALA แล้ว" | Pending |
 | TC23 | Part 2 boundary values | Submit profiles that score 1 and 2 | Score 1: eGFR < 60 only. Score 2: BMI < 23 only | Score 1 = not at risk; score 2 = at risk | Pending |
-| TC24 | At risk → case manager queue, not doctor | Submit an at-risk screening without pressing any send button, then check both roles | At-risk case from TC22 | Case appears in the case manager queue automatically right after saving; it does **not** appear on the physician dashboard; the SHPH screen has no "send to doctor" button and no doctor report | Pending |
-| TC25 | Not at risk — record and guidance | Submit a low-risk screening | Part 2 score 0 or 1 | Result shows not at risk with guidance; the case is saved and not queued for the case manager | Pending |
+| TC24 | At risk → case manager queue, not doctor | Submit an at-risk screening without pressing any send button, then check both roles | At-risk case from TC22 | The result screen shows the banner "ส่งเข้าคิวผู้ดูแลเคส MALA แล้ว" and says the case is not sent to the doctor from the MALA score alone; the case appears in the case manager queue automatically right after saving; it does **not** appear on the physician dashboard; the SHPH screen has no "send to doctor" button and no doctor report | Pending |
+| TC25 | Not at risk — record and guidance | Submit a low-risk screening | Part 2 score 0 or 1 | Result screen shows the Part 1 to Part 4 cards and the guidance card without the case manager banner; the case is saved and not queued for the case manager | Pending |
 | TC26 | LINE alert not on the SHPH screen | Review the SHPH result screens | At-risk and dose-fail cases | No LINE alert button is shown to SHPH staff | Pending |
 | TC27 | Sick Day Rule warning | Submit a screening with vomiting or diarrhea (Q10) = yes | Symptom present | The result screen shows the "กฎวันป่วย (Sick Day Rule)" warning card | Pending |
 | TC28 | Finish & start next patient | Tap "เสร็จสิ้น · สแกนผู้ป่วยรายถัดไป" | Completed screening | Returns to Step 1 ready for the next patient; no data from the previous patient remains | Pending |
 | TC29 | Physician sees dose-fail cases only | Log in as physician with one dose-fail and one at-risk case in the system | Cases from TC12 and TC22 | "รอสั่งการรักษา" lists the dose-fail case and not the at-risk case | Pending |
-| TC30 | Case manager queue shows at-risk cases | Log in as case manager after TC22 | At-risk case from TC22 | Case appears in the "คิวติดตาม" tab (the tab's count badge increases; status wording to verify) | Pending |
-| TC31 | Case manager opens a case | Open a case from the queue | Case from TC30 | Patient info, itemized Part 2 score (eGFR, BMI, alcohol), and found factors are shown; nothing is sent to the doctor | Pending |
+| TC30 | Case manager queue shows at-risk cases | Log in as case manager after TC22 | At-risk case from TC22 | Case appears in the "คิวติดตาม" tab under "รอดำเนินการ" (the tab's count badge increases); the search box finds it by name or HN | Pending |
+| TC31 | Case manager opens a case | Open a case from the queue | Case from TC30 | Patient info, itemized Part 2 score (eGFR, BMI, alcohol), found factors and the screening history with time are shown; "จัดการแล้ว" moves the case to the "จัดการแล้ว" tab; nothing is sent to the doctor | Pending |
 | TC32 | Case manager does not see dose-fail cases | Log in as case manager with a dose-fail case in the system | Case from TC12 | The dose-fail case is not in the queue | Pending |
 | TC33 | Case manager dashboard (mockup) | Log in as case manager and open "แดชบอร์ด/รายงาน" | Demo data on screen | The cards show dose checks (Part 1), MALA assessments (Part 2), the share at risk and the share of listed patients with a recorded result; the numbers agree with each other (for example, passed + sent to doctor = total dose checks); the area card and community guidance card are shown; "ดาวน์โหลด CSV" is available | Pending |
-| TC34 | No volunteer wording | Read the review screen and the dashboard text | Any screening | No screen mentions volunteers (อสม.). **Known issue (seen again on November 16):** the review screen shows "บันทึกโดย อสม. ประจำหมู่ 1", and the guidance card on the dashboard mentioned อสม. on November 15; fix before UAT | Pending |
+| TC34 | No volunteer wording | Read the review screen and the dashboard text | Any screening | No screen mentions volunteers (อสม.). **Known issue (seen on November 16):** the review screen shows "บันทึกโดย อสม. ประจำหมู่ 1", and the dashboard guidance card says "ปรึกษา อสม. หรือบุคลากรสุขภาพ"; fix before UAT | Pending |
 | TC35 | Excel import | On Step 1 choose "นำเข้ารายชื่อจาก Excel", set the backup area, and select a test file | A test .xlsx file with invented patients (HN, name, sex, age, eGFR) | The patients appear in the list with the values from the file; the backup area is used for rows without an area; weight, height, date of birth and Metformin dose must still be entered; the file is not sent to a backend (to verify) | Pending |
 | TC36 | Dose check boundary values | Confirm patients at the CPG limits (create them with manual entry) | eGFR 45 with 2000 and 2001 mg/day; eGFR 44 with 1000 and 1001 mg/day; eGFR 30 with 1000 mg/day; eGFR 29 | 2000 and 1000 mg/day pass; 2001 and 1001 mg/day fail; eGFR 29 is to verify | Pending |
 
-**Note:** Pending means the test has not yet been executed. The team will record actual Pass/Fail results during testing. Points to verify against the prototype before marking results: the exact fail screens for eGFR below 30 and for a dose above 2,000 mg/day at eGFR 45 or higher, the result screen after saving, the case manager queue tab, the physician dashboard, and the Excel import. **Dose rule:** the prototype follows the CPG table (eGFR 30–44 passes up to 1,000 mg/day), while the design agreed earlier failed any eGFR below 45; ask the mentor which rule applies and update TC11–TC14 and TC36 if it changes. The patient list and the patient card still show the old three-level labels ("ความเสี่ยงต่ำ / เสี่ยงปานกลาง / เสี่ยงสูง"), which are not part of the new Part 1 / Part 2 flow. Test patients created by hand (for example HN TEST-001) must use invented data and be removed before the UAT.
+**Note:** Pending means the test has not yet been executed. The team will record actual Pass/Fail results during testing. Points to verify against the prototype before marking results: the exact fail screens for eGFR below 30 and for a dose above 2,000 mg/day at eGFR 45 or higher, the physician dashboard, and the Excel import. **Dose rule:** the team uses the CPG table (eGFR 30–44 passes up to 1,000 mg/day), which is what the prototype does.
+
+**Known display issues seen on November 16 (fix before UAT):** volunteer wording (อสม.) on the review screen and the dashboard guidance card (TC34); the label "Yellow" in the case manager history; the old three-level labels on the patient list and card ("ความเสี่ยงต่ำ / เสี่ยงปานกลาง / เสี่ยงสูง"); "มก." shown twice in the Metformin line; a sparkle icon on the advice card although the advice is rule-based; the dashboard denominator "30" that ignores patients added by hand; no consent step.
+
+**Test data:** the dashboard counts every saved test run (at the last check: 5 dose checks, 1 sent to the doctor, 3 Part 2 assessments, 4 patients with a result). Test patients created by hand (for example HN TEST-001, TEST-A, TEST-B) must use invented data, and all of them and their test runs must be cleared before the UAT so that the dashboard shows only the real sessions.
 
 ### 3.2 UAT Scenarios (SHPH staff only — this round)
 
@@ -239,12 +243,12 @@ All dates in v1.0 (Oct 27 – Nov 18) have been superseded. UAT is set for Tuesd
 
 | Date | Activity | Owner | Status |
 |---|---|---|---|
-| Nov 15–16 | Update the prototype to the new flow (dose check first, case manager role) and fix the known issues (volunteer wording, old three-level labels) | Product Owner + AI Lead | To Do |
-| Nov 15–16 | Confirm the dose rule for eGFR 30–44 with the mentor and verify the test cases against the revised prototype | Product Owner + AI Lead | To Do |
+| Nov 15–16 | Update the prototype to the new flow (dose check first, case manager role) and fix the known issues (volunteer wording, "Yellow" label, old three-level labels, duplicate "มก.", sparkle icon, dashboard denominator) | Product Owner + AI Lead | To Do |
+| Nov 16 | Verify the test cases against the revised prototype (the dose rule follows the CPG table) | Product Owner + AI Lead | To Do |
 | Nov 16 | Prepare UAT script, observer form, consent form for the SHPH scenarios | Product Owner | To Do |
 | Nov 15–16 | Run Unit & Integration tests (dose check, Part 2 score, routing); fix bugs | Product Owner + AI Lead | To Do |
 | Nov 16 | Run E2E tests for the critical flows (dose-fail → doctor; at risk → case manager queue) | Product Owner + QA Lead | To Do |
-| Nov 16 | Set up staging environment + seed data (patients for dose-pass, dose-fail, at-risk, low-risk), remove any hand-made test patient (for example HN TEST-001), and prepare participants U01–U07 | Product Owner | To Do |
+| Nov 16 | Set up staging environment + seed data (patients for dose-pass, dose-fail, at-risk, low-risk), clear all hand-made test patients (for example HN TEST-001, TEST-A, TEST-B) and test runs so the dashboard starts at zero, and prepare participants U01–U07 | Product Owner | To Do |
 | Nov 17 | ★ UAT with SHPH staff | Moderator + Note-taker | To Do |
 | After Nov 17 | Calculate SUS/TAM scores, Before/After comparison | QA Lead | To Do |
 | After Nov 17 | Prepare final test summary for report and presentation | All members | To Do |
