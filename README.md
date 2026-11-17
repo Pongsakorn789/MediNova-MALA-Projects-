@@ -1,8 +1,8 @@
-# MALA Risk Screening & Alert System
+# MALA Risk Screening & Monitoring System (MRSS)
 
 Metformin-Associated Lactic Acidosis (MALA) screening at the point of dispensing.
 
-Presented by Warangkana Ngandee, Drug Information Center, Chiangrai Prachanukroh Hospital.
+Presented by MediNova.
 
 **Version:** 1.1 (revised November 15, 2026) · Prototype: https://mala-project-2026.web.app
 
@@ -34,7 +34,7 @@ The system holds each patient's latest eGFR and current Metformin dose and **che
 
 Hospitals send Metformin to Primary Care Units (PCUs, รพ.สต.) so that stable, uncomplicated diabetic patients can collect it close to home and reduce hospital crowding. In this process, the staff who dispense the drug at the PCU **cannot see the patient's eGFR** and **do not collect other risk-screening data** (weight, height, alcohol use) that help predict lactic acidosis. Patients therefore receive Metformin without any risk screening.
 
-MALA is a severe complication of Metformin use and is costly to treat: roughly 30,000–90,000+ THB per case in public hospitals and 100,000–300,000+ THB per case in private hospitals, depending on ICU stay and the number of dialysis sessions.
+MALA is a severe complication of Metformin use and is costly to treat: roughly 30,000–90,000+ THB per case in public hospitals and 100,000–300,000+ THB per case in private hospitals, depending on ICU stay and the number of dialysis sessions. *Source: briefing slides provided by the hospital mentor at the start of the project (see [Sources of figures](#sources-of-figures)).* Thai case reports also describe hemodialysis (2 to 6 sessions) and hospital stays of 6 to 12 days per patient [1][2]; they report no cost in baht.
 
 **Current process:** Hospital ships Metformin → PCU receives and dispenses → patient receives the drug with no risk screening.
 
@@ -217,7 +217,7 @@ The case manager screen "คิวติดตามกลุ่มเสี่�
 
 ## Cost and rollout
 
-- **Running cost:** server rental, domain, and AI token usage, in the range of thousands of baht, compared with MALA treatment costs of hundreds of thousands of baht per case.
+- **Running cost:** server rental and domain. The system uses fixed rules and no AI model, so there is no AI usage cost. The team has not measured the running cost in baht.
 - **Phase 1:** pilot at PCUs within Mueang district, Chiang Rai.
 - **Next:** extend the system to the whole provincial network.
 
@@ -227,7 +227,10 @@ The system handles identifiable patient data, so it should follow the Personal D
 
 ## Testing
 
-The test plan is in [Test_Plan_MediNova.md](Test_Plan_MediNova.md) (version 1.1). The user acceptance test with PCU Staff is scheduled for **Tuesday, November 17, 2026**. This round covers the PCU Staff role only; the physician and case manager screens are checked only for what they display and where cases arrive.
+- **Test plan:** [Test_Plan_MediNova.md](Test_Plan_MediNova.md) (version 1.3, revised November 16, 2026). This round covers the PCU Staff role only; the physician and case manager screens are checked only for what they display and where cases arrive.
+- **UAT results:** [UAT_Results_MediNova.md](UAT_Results_MediNova.md). Participants are identified by codes U01–U09 only; most are proxy users, not PCU Staff. The sessions were held mostly on November 13, 2026, before the November 15–16 prototype update, so the results describe the earlier flow, not the final one. See the file for the limitations.
+- **SUS / TAM:** [sus_tam_results.md](sus_tam_results.md), with the anonymised raw responses in [sus_tam_responses.csv](sus_tam_responses.csv).
+- **Demo account:** the login page of the prototype pre-fills a demo PCU Staff account. It is for the prototype only and must not exist in a production system (see [.docs/rule.md](.docs/rule.md), Section 4).
 
 ## Open items
 
@@ -239,3 +242,15 @@ The test plan is in [Test_Plan_MediNova.md](Test_Plan_MediNova.md) (version 1.1)
 6. **Offline fallback and camera OCR.** Not yet confirmed in the prototype.
 7. **Incidence figure.** The slide states 137–871 MALA cases per 100,000 people per year, which looks high compared with the usual literature; verify the source before presenting.
 8. **Features not in this prototype.** The three-colour tier dashboard, the physician's one-click dose logging, and audible pop-up alerts are not part of this prototype; the hospital may add them later.
+
+## Sources of figures
+
+| Figure | Source |
+| --- | --- |
+| MALA treatment cost: 30,000–90,000+ THB (public) and 100,000–300,000+ THB (private) per case | Briefing slides from the hospital mentor (Drug Information Center, Chiangrai Prachanukroh Hospital), provided at the start of the project. Not independently verified by the team. |
+| Hemodialysis sessions and hospital stay in Thai MALA cases | References [1] and [2] below |
+
+## References
+
+1. Duangmatphon K. (2021). การพยาบาลผู้ป่วย Metformin associated lactic acidosis ที่รับการรักษาโดยการฟอกเลือดด้วยเครื่องไตเทียม: กรณีศึกษา 2 ราย. *Maha Sarakham Hospital Journal*, 17(3), 13–22. https://he02.tci-thaijo.org/index.php/MKHJ/article/view/244303 (hemodialysis 6 and 2 sessions; hospital stay 12 and 6 days)
+2. Soottiprapar U. (2023–2024). การพยาบาลผู้ป่วย metformin associated lactic acidosis (MALA) ที่ได้รับการรักษาด้วยการฟอกเลือดด้วยเครื่องไตเทียม กรณีศึกษา 2 ราย. *Academic Journal of Mahasarakham Provincial Public Health Office*, 8(15). https://thaidj.org/index.php/AJMP/article/download/15462/12251 (2 hemodialysis sessions each; hospital stay 10 days each)
