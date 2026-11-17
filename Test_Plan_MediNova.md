@@ -184,11 +184,13 @@ Note for the team: if real SHPH participants cannot be arranged in time, documen
 
 ### 4.2 Testing Procedure
 
+The full step-by-step UAT procedure, including how the moderator reads each scenario aloud, the think-aloud instructions and the observation and note-taking guidance, is documented in the separate [MALA Screening UAT Test Procedures](https://docs.google.com/document/d/1LORiYhVu8wcLvgcyGiOtS-u9Doqr6cdybZ9UoJtXAIU/edit?usp=sharing) document. The summary below follows that document.
+
 1. Explain the testing purpose and obtain consent (PDPA — ask before recording audio/video).
 2. Assign a participant ID (U01–U07) instead of using real names.
-3. Provide the SHPH scenarios from Section 3.2.
+3. Provide the SHPH scenarios from Section 3.2. The moderator reads each scenario aloud without naming any button (see the UAT Test Procedures).
 4. Have the participant do the task the old/manual way first if applicable, to capture a "before" baseline.
-5. Allow the participant to complete tasks independently; observe and think-aloud, do not help or point.
+5. Allow the participant to complete tasks independently; observe and think-aloud, do not help or point (see the UAT Test Procedures).
 6. Record task success, completion time, errors, and issues.
 7. Collect questionnaire responses (if used) and a short closing interview.
 8. Store anonymised testing evidence (consent form, raw data sheet, notes).
