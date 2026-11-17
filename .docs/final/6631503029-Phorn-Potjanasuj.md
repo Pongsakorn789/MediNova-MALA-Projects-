@@ -1,20 +1,14 @@
-# Role Statement: Maneenat Wantanasri (6631503035), UX/UI Designer
+# Role Statement — Phorn Potjanasuj
 
-**Team:** MediNova · **Project:** MALA Risk Screening & Monitoring System (MRSS) · **Live URL:** https://mala-project-2026.web.app
+**Student ID:** 6631503029 
+**Role:** QA / Test Lead
 
 ## What I owned
 
-As UX/UI Designer, I owned how PCU Staff (รพ.สต.) move through the screening on a phone. The flow has five steps (patient, weight, height, risk factors, review and save), one question group per screen, large buttons for one-handed use, and a numeric keypad for weight and height. I designed the screens that show the Part 1 dose result, the Part 2 score with its reason, the advice card with the Sick Day Rule, and the queue banner after saving.
+I owned the test plan, UAT structure, coded-session reporting, and SUS/TAM calculation record. The test strategy covers unit, integration, end-to-end, and user acceptance levels in [Test_Plan_MediNova.md](../../../Test_Plan_MediNova.md). The observed outcomes, participant limitations, and usability issues are in [UAT_Results_MediNova.md](../../../UAT_Results_MediNova.md); anonymised questionnaire data and calculations are in [sus_tam_responses.csv](../../../sus_tam_responses.csv) and [sus_tam_results.md](../../../sus_tam_results.md).
 
-The UAT showed where the design needs work: weight entered in the wrong field, an unclear "ปัจจัยเสี่ยง" page, and users unsure what to do after the red high-risk alert. These cases come from the earlier flow, so the final flow still needs a retest. [CONFIRM: which fixes I made, and the commits.]
+I recorded results honestly: pending cases are not reported as passed, proxy sessions are labelled, and no Before baseline or fix commit is invented. The [MUST-task evidence](../../03-test/must-task-before-after.md) therefore keeps unmeasured baselines as “Not measured,” and the [issue log](../../03-test/issue-log.md) keeps missing fix/retest evidence as `UNVERIFIED`.
 
-## Evidence
+## AI disclosure
 
-- Working prototype: https://mala-project-2026.web.app
-- Design files / wireframes: [CONFIRM: add Figma or image links]
-- UAT findings on the screens: `UAT_Results_MediNova.md`, Section 6 (issues 1–3 and 7)
-- Screen descriptions: `Test_Plan_MediNova.md` (v1.3), Section 1
-
-## AI Disclosure
-
-AI (Claude) helped draft this statement from the project overview, the Test Plan and the UAT Results. I must check every claim against my own design files and commits before submission. Items marked **[CONFIRM]** are not verified.
+I used AI to helped draft tables and summarize supplied forms, but it did not run sessions or create results. The team must verify each calculation against the raw forms before submission.
