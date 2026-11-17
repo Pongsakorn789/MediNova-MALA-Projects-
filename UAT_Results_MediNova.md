@@ -4,6 +4,27 @@
 **Test Plan:** `Test_Plan_MediNova.md` (v1.3; update to v1.4 and link to this file)
 **System under test:** mala-project-2026.web.app
 **Evidence:** observer forms, "แบบฟอร์มสังเกตการณ์", participants U01–U09
+
+## Video Evidence of UAT Sessions
+
+The following Google Drive folder contains video recordings provided by the team as
+supporting evidence of the user acceptance testing (UAT) sessions conducted for MRSS.
+
+- **UAT video recordings:** [Google Drive — MediNova UAT Video Evidence](https://drive.google.com/drive/folders/1nuU2Ss3pHAbcM5P9wGk5o1tp5LTeQTGZ?usp=sharing)
+
+These recordings are supplementary evidence for the testing activities and should be
+reviewed alongside the observer forms and the results documented below. Participant
+codes, roles, and test conditions are described in **Section 1: Participants**.
+The recordings alone should not be treated as proof that every participant was a
+real clinical user; the report identifies proxy participants separately.
+
+**Privacy note:** Before sharing this folder with the instructor or adding it to a
+public repository, the team must check that the recordings do not expose identifiable
+patient information or other personal data, and that the participants' consent and
+the Drive access permissions allow this sharing.
+
+---
+
 **Date of sessions:** 13 November 2026 for U01–U08 [CONFIRM: all 8 sessions on this date]. U09: [CONFIRM: date of the session and which version of the prototype was used]
 (13 November is before the instructor's own test on 17 November 2026, and before the
 prototype was updated to the flow in Test Plan v1.3 on 15–16 November.)
