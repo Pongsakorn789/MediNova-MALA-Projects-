@@ -1,7 +1,6 @@
-# Role Statement — Phorn Potjanasuj
+# Role Statement: Phorn Potjanasuj (6631503029), QA / Test Lead
 
-**Student ID:** 6631503029 
-**Role:** QA / Test Lead
+**Team:** MediNova · **Project:** MALA Risk Screening & Monitoring System (MRSS) · **Live URL:** https://mala-project-2026.web.app
 
 ## What I owned
 
