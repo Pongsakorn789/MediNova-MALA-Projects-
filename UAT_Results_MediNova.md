@@ -193,33 +193,37 @@ UAT01: 0/2 (help needed, wrong weight typed). UAT02, UAT03, UAT04 and search:
 |---|---|---|---|
 | Task Success Rate, per task | >= 70% | UAT01: 44.4% (all) / 57.1% (Group B). UAT02: 66.7% (all) / 57.1% (Group B). The others: 100% | **No (UAT01 and UAT02)** |
 | UAT sessions completed | all planned | 9 held (7 planned) | Yes |
-| SUS | >= 68 | [FILL from the SUS file, n=?] | [CONFIRM] |
-| TAM | >= 3.5 / 5 | [FILL from the TAM file, n=?] | [CONFIRM] |
+| SUS | >= 68 | 80.9 (SD 9.8; range 65.0–90.0), n = 8. Source: `sus_tam_results.md`, `sus_tam_responses.csv`. Two of 8 scored 70.0 and 65.0 | Yes |
+| TAM | >= 3.5 / 5 | PU 4.17, PEOU 4.38, BI 4.21 (lowest single BI 2.67), n = 8. Same sources | Yes |
 | Open Critical bugs | 0 | [CONFIRM from the issue log] | [CONFIRM] |
 
 Questionnaires: SUS and TAM were answered in an online form filled in by each
-participant after the test; the responses are stored in that form. Export the
-responses (anonymised: participant codes only, no names, e-mail addresses or
-timestamps that identify a person) to a CSV file in the repo, for example
-`test/sus_tam_responses.csv`, and link it here. [CONFIRM: file path of the
-export.] If fewer than 9 people answered, state who did not and why.
+participant after the test. The anonymised export is `sus_tam_responses.csv`
+(responses R01–R08); the scores are in `sus_tam_results.md`. [CONFIRM: file
+path of both files in the repo.]
 
-Questionnaire coverage (from the response sheet, "Form Responses 1"):
-- 7 responses were counted when the sheet was checked, for 8 sessions then held.
-  [CONFIRM: whether U09 has answered, and which participants did not answer and why.]
-- All 7 answered "ฉันให้ความยินยอม" to the PDPA consent question.
-- The SUS block (10 items) was answered by all 7 respondents.
-- The TAM block (PU, PEOU, BI) appears to be filled in by only 5 of the 7
-  [CONFIRM when the CSV export is checked]. Report TAM with its real n, not n=9.
-- The sheet has an e-mail column (university addresses). Remove it, and
-  any timestamp, before the CSV goes into the repository; use U01–U09 only.
-- The "job title" column is typed freely by respondents. It is not proof of the
-  respondent's workplace. Keep the labels from Section 1.
-- One test-date cell holds a wrong value (a typing error). Correct it from the
-  session records before computing anything from the date.
-- The item about the buttons "ส่งเคสเข้าคิวแพทย์" and "ส่งแจ้งเตือนเข้ากลุ่ม LINE"
-  matches the earlier flow, which supports the note in Section 6 that these
-  sessions used the earlier version.
+Questionnaire coverage (checked against `sus_tam_responses.csv`):
+- **8 responses** for 9 UAT participants, so 1 participant has no response
+  [CONFIRM: who did not answer, and why]. 7 responses are dated 13 November and
+  1 (R08) is dated 17 November [CONFIRM: whether R08 is U09, and which prototype
+  version that person used].
+- All 8 answered all 10 SUS items and all 9 TAM items (no blanks). Report SUS and
+  TAM with n = 8, not n = 9. (An earlier version of this section said 7 responses
+  and TAM n = 5; that was written before the export was checked and is replaced.)
+- The export has no participant code, so responses cannot be matched to U01–U09.
+  The CSV uses R01–R08 in sheet order. [CONFIRM: add the U-code to each row if
+  the team can match it from the session records.]
+- E-mail, names, job title (typed freely, not proof of the workplace) and
+  language were removed from the export. The "job title" labels are not used;
+  keep the labels from Section 1.
+- One test-date cell held a wrong year (2569, a typing error) and is corrected to
+  2026-11-13 for R07. [CONFIRM from the session record.]
+- The export has no consent column. [CONFIRM: where PDPA consent is recorded.]
+- The extra item about the buttons "ส่งเคสเข้าคิวแพทย์" and "ส่งแจ้งเตือนเข้ากลุ่ม
+  LINE" (mean 3.62; R08 answered 2) matches the earlier flow, which supports the
+  note in Section 6 that these sessions used the earlier version.
+- SUS and TAM are self-reported and collected after the UAT. A high SUS does not
+  mean every task was easy: 6 of 9 participants needed help in at least one task.
 
 ## 6. Issues found (for the issue log)
 
