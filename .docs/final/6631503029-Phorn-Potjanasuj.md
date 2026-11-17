@@ -1,19 +1,20 @@
-Role Statement: Phorn Potjanasuj (6631503029), QA / Test Lead
+# Role Statement: Maneenat Wantanasri (6631503035), UX/UI Designer
 
-Team: MediNova · Project: MALA Risk Screening & Monitoring System (MRSS) · Live URL: https://mala-project-2026.web.app
+**Team:** MediNova · **Project:** MALA Risk Screening & Monitoring System (MRSS) · **Live URL:** https://mala-project-2026.web.app
 
-What I owned
+## What I owned
 
-As QA / Test Lead, I owned the test approach for MRSS. The Test Plan (v1.3) defines four test levels, 36 functional test cases (TC01–TC36), seven UAT scenarios for PCU Staff, the metrics (task success, time, errors, SUS and TAM) and the exit criteria (for example task success of at least 70% per task, SUS of at least 68).
+As UX/UI Designer, I owned how PCU Staff (รพ.สต.) move through the screening on a phone. The flow has five steps (patient, weight, height, risk factors, review and save), one question group per screen, large buttons for one-handed use, and a numeric keypad for weight and height. I designed the screens that show the Part 1 dose result, the Part 2 score with its reason, the advice card with the Sick Day Rule, and the queue banner after saving.
 
-After the UAT on 13 November, the team recorded 9 participants on observer forms. The results are in the UAT Results and the SUS/TAM Results. I kept the findings honest: full screening (UAT01) and referring a high-risk case (UAT02) did not reach 70% in any way of counting, and U01–U02 were one pair, so Group B is reported separately. [CONFIRM: which sessions I observed and which figures I computed myself.]
+The UAT showed where the design needs work: weight entered in the wrong field, an unclear "ปัจจัยเสี่ยง" page, and users unsure what to do after the red high-risk alert. These cases come from the earlier flow, so the final flow still needs a retest. [CONFIRM: which fixes I made, and the commits.]
 
-Evidence
-Test Plan: Test_Plan_MediNova.md (v1.3)
-UAT results and issue log: UAT_Results_MediNova.md
-SUS / TAM: sus_tam_results.md and sus_tam_responses.csv [CONFIRM: both pushed to the repo]
-Observer forms and recordings: [CONFIRM: storage location, not the repo, because of PDPA]
-Prototype under test: https://mala-project-2026.web.app
-AI Disclosure
+## Evidence
 
-AI (Claude) helped draft this statement, and helped format the UAT and SUS/TAM files, from the team's observer forms and response sheet. I must check every figure against the forms and the CSV before submission. Items marked [CONFIRM] are not verified.
+- Working prototype: https://mala-project-2026.web.app
+- Design files / wireframes: [CONFIRM: add Figma or image links]
+- UAT findings on the screens: `UAT_Results_MediNova.md`, Section 6 (issues 1–3 and 7)
+- Screen descriptions: `Test_Plan_MediNova.md` (v1.3), Section 1
+
+## AI Disclosure
+
+AI (Claude) helped draft this statement from the project overview, the Test Plan and the UAT Results. I must check every claim against my own design files and commits before submission. Items marked **[CONFIRM]** are not verified.
