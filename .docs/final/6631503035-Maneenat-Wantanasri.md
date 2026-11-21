@@ -21,3 +21,23 @@ The UAT showed where the design needs work: weight entered in the wrong field, a
 ## AI Disclosure
 
 We used Stitch to design the screens, Gemini to write prompts, Claude in VS Code to write the code, and Claude to help with the wording of this statement, the slides and the documents. I checked every AI output against the live system and the repository files before using it.
+
+## Reflection
+
+### 1. Lessons Learned: AI in software engineering
+
+We gave the hospital's requirements to AI to generate screen images and then code. The staff could try real screens instead of reading a description, so they told us at once what was right or wrong, and we changed the system the same day.
+
+The worse side is that AI does not know how the real system works. Its mockups and documents sometimes used old terms that did not match the live website, so I checked them one by one. When a requirement changed (dose check first, new case manager role), I had to update every place.
+
+The lesson: AI is good for fast first drafts, but requirements must come from real users, and a person must check the result.
+
+### 2. My Position in the Industry
+
+I am a beginner who uses AI as a tool. In this project I handled UX/UI and requirements: collecting them from the hospital, designing in Figma, and passing them to the Product Owner to build with AI. AI can do repeated work, but listening to users, deciding what matters at the workplace, and checking safety still need a person. I want to develop these skills.
+
+### 3. My Plan
+
+I enjoyed finding what the staff really needed more than detailing screens, so I am interested in becoming a Business Analyst (BA).
+
+- **Next year:** I plan to work in a BA role or as a Technical Readiness Coordinator, practise user interviews and user stories, and use MALA in my portfolio.
